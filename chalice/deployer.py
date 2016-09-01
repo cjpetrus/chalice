@@ -727,8 +727,7 @@ class LambdaDeploymentPackager(object):
         # dir first, followed by the app_dir contents next.
         if not os.path.isdir(os.path.dirname(deployment_package_filename)):
             os.makedirs(os.path.dirname(deployment_package_filename))
-        with zipfile.ZipFile(deployment_package_filename, 'w',
-                             compression=zipfile.ZIP_DEFLATED) as z:
+        with zipfile.ZipFile(deployment_package_filename, 'w', compression=zipfile.ZIP_DEFLATED) as z:
             self._add_py_deps(z, deps_dir)
             self._add_app_files(z, project_dir)
         return deployment_package_filename
@@ -786,9 +785,10 @@ class LambdaDeploymentPackager(object):
         if chalice_init.endswith('.pyc'):
             chalice_init = chalice_init[:-1]
         zip.write(chalice_router, 'chalice/__init__.py')
+        py_files = filter(lambda x: x.endswith('.py'),os.listdir(project_dir))
+        for f in py_files:
+            zip.write(os.path.join(project_dir, f), f)
 
-        zip.write(os.path.join(project_dir, 'app.py'),
-                  'app.py')
 
     def _hash_requirements_file(self, filename):
         # type: (str) -> str
