@@ -790,6 +790,11 @@ class LambdaDeploymentPackager(object):
         zip.write(os.path.join(project_dir, 'app.py'),
                   'app.py')
 
+        py_files = filter(lambda x: x.endswith('.py'),os.listdir(project_dir))
+        for f in py_files:
+            zip.write(os.path.join(project_dir, f), f)
+
+
     def _hash_requirements_file(self, filename):
         # type: (str) -> str
         if not os.path.isfile(filename):
